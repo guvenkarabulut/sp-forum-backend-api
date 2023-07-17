@@ -3,6 +3,7 @@ package com.guvenkarabulut.forumwebapi.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.net.URL;
 import java.util.Date;
 
 @Entity
@@ -25,6 +26,8 @@ public class User {
     private String lastname;
     @Column(length = 50)
     private String password;
+    @Column(nullable = true,length = 500)
+    private String profilImageUrl;
     private Date createTime;
     private boolean isActive;
 }
