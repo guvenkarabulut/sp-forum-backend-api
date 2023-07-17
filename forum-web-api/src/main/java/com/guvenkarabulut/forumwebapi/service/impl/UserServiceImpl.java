@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
 
     private MultipartFile base64toImage(String base64) {
         String[] baseStr = base64.split(",");
-        byte[] imageByte = Base64.getDecoder().decode(baseStr[0]); // Değerler arasındaki virgülü değiştirdik
+        byte[] imageByte = Base64.getDecoder().decode(baseStr[0]);
         return new MockMultipartFile("file", "image.jpg", "image/jpeg", imageByte);
     }
 }
