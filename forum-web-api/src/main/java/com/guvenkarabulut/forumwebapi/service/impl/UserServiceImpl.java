@@ -5,8 +5,10 @@ import com.cloudinary.utils.ObjectUtils;
 import com.guvenkarabulut.forumwebapi.dto.request.UserRequest;
 import com.guvenkarabulut.forumwebapi.dto.response.UserResponse;
 import com.guvenkarabulut.forumwebapi.entity.User;
+import com.guvenkarabulut.forumwebapi.exception.EmailAlreadyExistException;
 import com.guvenkarabulut.forumwebapi.repository.UserRepository;
 import com.guvenkarabulut.forumwebapi.service.UserService;
+import com.guvenkarabulut.forumwebapi.utils.ImageConverter;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.mock.web.MockMultipartFile;
@@ -23,11 +25,15 @@ import java.util.Map;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final ImageConverter imageConverter;
     private final Cloudinary cloudinary;
 
     @Override
     public UserResponse create(UserRequest userRequest) throws IOException {
-        MultipartFile file = base64toImage(userRequest.getProfileImageBase64());
+        if (userRepository.findUserByEmail(userRequest.getEmail())!=null){
+            throw new EmailAlreadyExistException(userRequest.getEmail()+" Email Already exist");
+        }
+        MultipartFile file = imageConverter.base64toImage(userRequest.getProfileImageBase64());
         Map<?, ?> result = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
 
         User user = User.builder()
@@ -43,9 +49,4 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(userRepository.save(user), UserResponse.class);
     }
 
-    private MultipartFile base64toImage(String base64) {
-        String[] baseStr = base64.split(",");
-        byte[] imageByte = Base64.getDecoder().decode(baseStr[0]); // Değerler arasındaki virgülü değiştirdik
-        return new MockMultipartFile("file", "image.jpg", "image/jpeg", imageByte);
-    }
 }

@@ -17,6 +17,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "user_id_seq")
     @SequenceGenerator(name = "user_id_seq")
+    @Column(name = "user_id")
     private int id;
     @Column(length = 50,unique = true)
     private String email;
