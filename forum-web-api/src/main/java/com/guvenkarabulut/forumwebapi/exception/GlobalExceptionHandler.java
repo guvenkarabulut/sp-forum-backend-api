@@ -27,4 +27,18 @@ public class GlobalExceptionHandler {
         responseBody.put("message", ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(responseBody);
     }
+    @ExceptionHandler({UserNotFoundException.class})
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException ex) {
+        Map<String, String> responseBody = new HashMap<>();
+        responseBody.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(responseBody);
+    }
+    @ExceptionHandler({PostIdNotFoundException.class})
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<Object> handlePostIdNotFoundException(PostIdNotFoundException ex) {
+        Map<String, String> responseBody = new HashMap<>();
+        responseBody.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(responseBody);
+    }
 }
